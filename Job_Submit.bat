@@ -1,2 +1,2 @@
 @echo off
-"D:\Acdamic\ANSYS\ANSYS Inc\v181\ansys\bin\winx64\ANSYS181.exe"  -p ane3flds -dir "F:\WorkPath\MATLAB\structural_optimization\FEM" -j "Three_Bar_Truss" -s read -l en-us -b -i "F:\WorkPath\MATLAB\structural_optimization\Tri_Bar_Truss.mac" -o "F:\WorkPath\MATLAB\structural_optimization\FEM\Tri_Bar_Truss.out" 
+start "" /min "D:\Acdamic\ANSYS\ANSYS Inc\v181\ansys\bin\winx64\ANSYS181.exe" -p ane3flds -dir "F:\WorkPath\ANSYS\SOP" -b -i "F:\WorkPath\ANSYS\SOP\Tri_Bar_Truss.mac" -o "F:\WorkPath\ANSYS\SOP\Tri_Bar_Truss.out" 

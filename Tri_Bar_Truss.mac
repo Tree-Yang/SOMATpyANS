@@ -2,7 +2,7 @@
 !Units:N,mm,s   
     
 finish$/clear   
-/filname, Tri_Bar_Truss, 1  
+!/filname, Tri_Bar_Truss, 1  
     
 !****************************************************   
 !Pre-processing 
@@ -66,27 +66,27 @@ pldisp, 1
     
 !Axis Force 
 !---------------------------------  
-*get, axisforce1, elem, 1, smisc, 1 
-*get, axisforce2, elem, 2, smisc, 1 
-*get, axisforce3, elem, 3, smisc, 1 
-*cfopen, elemaxisforce, dat, ,  
-*vwrite, axisforce1, axisforce2, axisforce3 
+!*get, axisforce1, elem, 1, smisc, 1 
+!*get, axisforce2, elem, 2, smisc, 1 
+!*get, axisforce3, elem, 3, smisc, 1 
+!*cfopen, elemaxisforce, dat, ,  
+!*vwrite, axisforce1, axisforce2, axisforce3 
+!(g15.6) 
+!*cfclos 
+    
+!Axis Sterss
+!---------------------------------  
+!这里*get命令中的etab选项比较有意思，后面的lab选项并不是某种单元类型输出中的名称  
+!而是已经定义好的etable的名称，这里的axstress就是提前定义好的link180单元的轴向应力表 
+etable, axstress, ls, 1 
+*get, axisstress1, elem, 1, etab, axstress  
+*get, axisstress2, elem, 2, etab, axstress  
+*get, axisstress3, elem, 3, etab, axstress  
+*cfopen, elemaxisstress, dat, , 
+*vwrite, axisstress1, axisstress2, axisstress3  
 (g15.6) 
 *cfclos 
     
-!!Axis Sterss
-!!---------------------------------  
-!!这里*get命令中的etab选项比较有意思，后面的lab选项并不是某种单元类型输出中的名称  
-!!而是已经定义好的etable的名称，这里的axstress就是提前定义好的link180单元的轴向应力表 
-!etable, axstress, ls, 1 
-!*get, axisstress1, elem, 1, etab, axstress  
-!*get, axisstress2, elem, 2, etab, axstress  
-!*get, axisstress3, elem, 3, etab, axstress  
-!*cfopen, elemaxisstress, dat, , 
-!*vwrite, axisstress1, axisstress2, axisstress3  
-!(g15.6) 
-!*cfclos 
-!    
 !!Node Displacement  
 !!---------------------------------  
 !ux1 = ux(1)$ux2 = ux(2)$ux3 = ux(3)$ux4 = ux(4) 
@@ -98,3 +98,4 @@ pldisp, 1
 !*cfclos 
     
 finish  
+save
