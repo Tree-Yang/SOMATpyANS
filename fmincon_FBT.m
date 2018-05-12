@@ -1,6 +1,9 @@
 clear;clc;close all;
 [history,timeconsumption,output] = runfmincon;
 %clc;    %清屏，输出迭代信息
+if exist('sop_old.log','file') == 2
+    delete('sop_old.log');   %删除sop_old.log
+end
 if exist('sop.log','file') == 2
     movefile('sop.log','sop_old.log');   %若存在日志文件，首先将其重命名
 end
@@ -38,10 +41,7 @@ ylabel('Section Area');
 set(gca,'FontName','Euclid','FontSize',18);
 %===========================================================================================
 function [history,timeconsumption,output] = runfmincon
-%将这一部分包含在函数内只是为了输出fmincon产生的近似最优点序列    
-    %x0 = [2;1;1];%初始点
-    %lb = [0.001;0.001;0.001];
-    %ub = [Inf;Inf;Inf];
+%将这一部分包含在函数内只是为了输出fmincon产生的近似最优点序列 
     x0 = [100;100];%初始点
     lb = [0.001;0.001];
     ub = [500;500];
@@ -51,8 +51,8 @@ function [history,timeconsumption,output] = runfmincon
     history.fval = [];
     %searchdir=[];
     %++++++++++++++++差分梯度++++++++++++++++
-    %options = optimoptions(@fmincon,'OutputFcn',@OutFun,'Algorithm','sqp','Display','iter-detailed');  %fmincon函数的配置
-    options = optimoptions(@fmincon,'OutputFcn',@OutFun,'Display','iter-detailed','SpecifyObjectiveGradient',true);  %fmincon函数的配置
+    options = optimoptions(@fmincon,'OutputFcn',@OutFun,'Algorithm','sqp','Display','iter-detailed');  %fmincon函数的配置
+    %options = optimoptions(@fmincon,'OutputFcn',@OutFun,'Display','iter-detailed','SpecifyObjectiveGradient',true);  %fmincon函数的配置
     %++++++++++++++++解析梯度++++++++++++++++
     %sqp算法
     %options = optimoptions(@fmincon,'OutputFcn',@OutFun,'Algorithm','sqp','Display','iter-detailed',...
@@ -119,12 +119,14 @@ function [history,timeconsumption,output] = runfmincon
 %     end
     %++++++++++++++++++++++++++有限元计算提供约束函数+++++++++++++++++++++++++++
     %目标函数和目标函数的导数(列向量)
-    function [obj,gradobj] = pnonpobj (x)
+    function [obj] = pnonpobj (x)
          obj = (707 + 1000) * x(1) + (1414 + 1000) * x(2);
-         gradobj = [1707;2414];
     end
     % %等式约束和不等式约束函数(行向量)以及等式约束和不等式约束函数导数(矩阵,行数等于约束函数数量,列数等于优化变量的数量)
     function [conie,cone] = pnonpcon(x)
+        %clear classes;  %清除MATLAB调用python产生的缓存，以便python函数的更新
+        %有限元分析路径
+        FEA_Path = 'F:\WorkPath\ANSYS\SOP\';
         %-----------------20180511 updated----------------------
         %以下一段程序使用文本读写的方式将数据从matlab传递到python中，但是存在很大的问题。
         %即使对于解析函数的情况，文件读写传递数据的方式也会导致不收敛
@@ -141,15 +143,15 @@ function [history,timeconsumption,output] = runfmincon
         %py.**就表示调用python函数
         py.ANSYS_mac_update.ANSYSmacupdate(x(1),x(1),x(2),x(2));
         %--------------------By YJS------------------------------
-        system('F:\WorkPath\MATLAB\structural_optimization\Job_Submit.bat');
+        system('Job_Submit.bat');
         flg = 1;    %检查有限元程序是否运行结束
         while flg==1
             pause(1);
-            if exist('F:\WorkPath\ANSYS\SOP\elemaxisstress.dat','file') == 2 %若有限元结果文件存在，则认为有限元计算结束
+            if exist([FEA_Path,'elemaxisstress.dat'],'file') == 2 %若有限元结果文件存在，则认为有限元计算结束
                 flg = 0;
             else
-                if exist('F:\WorkPath\ANSYS\SOP\Four_Bar_Truss.err','file') == 2
-                    errcell = FileRead('F:\WorkPath\ANSYS\SOP\Four_Bar_Truss.err',1000);  %将err文件中的字符串按行存入元胞数组
+                if exist([FEA_Path,'Four_Bar_Truss.err'],'file') == 2
+                    errcell = FileRead([FEA_Path,'Four_Bar_Truss.err'],1000);  %将err文件中的字符串按行存入元胞数组
                     for ii = 1 : 1 : length(errcell)
                         errloc = strfind(errcell{ii},'ERROR');  %检查err文件中是否存在错误信息
                         if ~isempty(errloc)     %若err文件中存在错误信息，则在command windows中显示错误信息
@@ -164,8 +166,8 @@ function [history,timeconsumption,output] = runfmincon
             end
         end
         %读取有限元计算结果
-        axst = load('F:\WorkPath\ANSYS\SOP\elemaxisstress.dat');
-        nd = load('F:\WorkPath\ANSYS\SOP\nodedisp.dat');
+        axst = load([FEA_Path,'elemaxisstress.dat']);
+        nd = load([FEA_Path,'nodedisp.dat']);
         conie = [abs(nd(3,2)) - 2,abs(axst)' - 100];
         cone = []; 
         %调用python脚本，更新文件夹
