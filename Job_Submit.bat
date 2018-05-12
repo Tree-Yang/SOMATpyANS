@@ -1,2 +1,2 @@
 @echo off
-start "" /min "D:\Acdamic\ANSYS\ANSYS Inc\v181\ansys\bin\winx64\ANSYS181.exe" -p ane3flds -dir "F:\WorkPath\ANSYS\SOP" -b -i "F:\WorkPath\ANSYS\SOP\Tri_Bar_Truss.mac" -o "F:\WorkPath\ANSYS\SOP\Tri_Bar_Truss.out" 
+start "" /min "D:\Acdamic\ANSYS\ANSYS Inc\v181\ansys\bin\winx64\ANSYS181.exe" -p ane3flds -dir "F:\WorkPath\ANSYS\SOP" -b -i "F:\WorkPath\ANSYS\SOP\FBT.mac" -o "F:\WorkPath\ANSYS\SOP\FBT.out" 
