@@ -51,7 +51,7 @@ function [history,timeconsumption,output] = runfmincon
     history.fval = [];
     %searchdir=[];
     %++++++++++++++++差分梯度++++++++++++++++
-    options = optimoptions(@fmincon,'OutputFcn',@OutFun,'Algorithm','sqp','Display','iter-detailed','FiniteDifferenceType','central',...
+    options = optimoptions(@fmincon,'OutputFcn',@OutFun,'Algorithm','interior-point','Display','iter-detailed','FiniteDifferenceType','central',...
         'ConstraintTolerance',1e-6,'OptimalityTolerance',1e-4,'StepTolerance',1e-6);
     %options = optimoptions(@fmincon,'OutputFcn',@OutFun,'Display','iter-detailed','FiniteDifferenceType','central');%fmincon函数的配置
     %options = optimoptions(@fmincon,'OutputFcn',@OutFun,'Display','iter-detailed','SpecifyObjectiveGradient',true);  %fmincon函数的配置
