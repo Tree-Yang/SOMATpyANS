@@ -51,7 +51,9 @@ function [history,timeconsumption,output] = runfmincon
     history.fval = [];
     %searchdir=[];
     %++++++++++++++++差分梯度++++++++++++++++
-    options = optimoptions(@fmincon,'OutputFcn',@OutFun,'Algorithm','sqp','Display','iter-detailed');  %fmincon函数的配置
+    options = optimoptions(@fmincon,'OutputFcn',@OutFun,'Algorithm','sqp','Display','iter-detailed','FiniteDifferenceType','central',...
+        'ConstraintTolerance',1e-6,'OptimalityTolerance',1e-4,'StepTolerance',1e-6);
+    %options = optimoptions(@fmincon,'OutputFcn',@OutFun,'Display','iter-detailed','FiniteDifferenceType','central');%fmincon函数的配置
     %options = optimoptions(@fmincon,'OutputFcn',@OutFun,'Display','iter-detailed','SpecifyObjectiveGradient',true);  %fmincon函数的配置
     %++++++++++++++++解析梯度++++++++++++++++
     %sqp算法
@@ -115,7 +117,7 @@ function [history,timeconsumption,output] = runfmincon
 %             nd = nd + 1/(2.07e5) * N1(ii) * NP(ii) * l(ii) / xx(ii);
 %         end
 %         cone = [];
-%         conie = [abs(str) - 100,abs(nd) - 2];
+%         conie = [abs(str) - 100,abs(nd) - 1.5];
 %     end
     %++++++++++++++++++++++++++有限元计算提供约束函数+++++++++++++++++++++++++++
     %目标函数和目标函数的导数(列向量)
@@ -168,8 +170,8 @@ function [history,timeconsumption,output] = runfmincon
         %读取有限元计算结果
         axst = load([FEA_Path,'elemaxisstress.dat']);
         nd = load([FEA_Path,'nodedisp.dat']);
-        conie = [abs(nd(3,2)) - 2,abs(axst)' - 100];
-        cone = []; 
+        conie = [abs(nd(3,2)) - 1.5,abs(axst)' - 100];
+        cone = [];
         %调用python脚本，更新文件夹
         %----------------20180509------------------
         %在其他电脑上运行有可能需要将下面命令中的'Python'去掉

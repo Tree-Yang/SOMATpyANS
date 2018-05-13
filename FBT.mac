@@ -74,7 +74,7 @@ pldisp, 1
 *get, axisforce4, elem, 4, smisc, 1 
 *cfopen, elemaxisforce, dat, ,  
 *vwrite, axisforce1, axisforce2, axisforce3,  axisforce4
-(f15.6) 
+(f24.10) 
 *cfclos 
     
 !Axis Sterss
@@ -88,7 +88,7 @@ etable, axstress, ls, 1
 *get, axisstress4, elem, 4, etab, axstress 
 *cfopen, elemaxisstress, dat, , 
 *vwrite, axisstress1, axisstress2, axisstress3, axisstress4  
-(f15.6) 
+(f24.10) 
 *cfclos 
     
 !Node Displacement  
@@ -98,7 +98,7 @@ uy1 = uy(1)$uy2 = uy(2)$uy3 = uy(3)$uy4 = uy(4)
 uz1 = uz(1)$uz2 = uz(2)$uz3 = uz(3)$uz4 = uz(4) 
 *cfopen, nodedisp, dat, ,   
 *vwrite, ux1, uy1, uz1, ux2, uy2, uz2, ux3, uy3, uz3, ux4, uy4, uz4 
-(f15.6,f15.6,f15.6) 
+(f24.10,f24.10,f24.10) 
 *cfclos 
     
 finish  
